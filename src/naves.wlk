@@ -23,6 +23,13 @@ class NaveEspacial {
 	}
 	
 	method estaTranquila() { return combustible >= 4000 and velocidad <= 12000 }
+	
+	// Method lookup
+	method escapar()
+	
+	method avisar()
+	
+	method recibirAmenaza() { self.escapar(); self.avisar() }
 }
 
 class NaveBaliza inherits NaveEspacial{
@@ -37,9 +44,8 @@ class NaveBaliza inherits NaveEspacial{
 		self.ponerseParaleloAlSol()
 	}
 	
-	method escapar() { self.irHaciaElSol() }
-	method avisar() { self.cambiarColorDeBaliza("rojo") }
-	method recibirAmenaza() { self.escapar(); self.avisar() }
+	override method escapar() { self.irHaciaElSol() }
+	override method avisar() { self.cambiarColorDeBaliza("rojo") }
 	
 	override method estaTranquila() { return super() and self.colorDeBaliza() != "rojo" }
 }
@@ -62,9 +68,8 @@ class NavePasajeros inherits NaveEspacial{
  		self.acercarseUnPocoAlSol()
  	}
  	
- 	method escapar() { self.velocidad(velocidad * 2) }
-	method avisar() { self.descargarComida(pasajeros); self.descargarBebida(2 * pasajeros) }
- 	method recibirAmenaza() { self.escapar(); self.avisar() }
+ 	override method escapar() { self.velocidad(velocidad * 2) }
+	override method avisar() { self.descargarComida(pasajeros); self.descargarBebida(2 * pasajeros) }
  	
  }
  
@@ -86,7 +91,7 @@ class NaveCombate inherits NaveEspacial{
  	method mensajesEmitidos() { return mensajesEmitidos }
  	method primerMensajeEmitido() { return mensajesEmitidos.head() }
  	method ultimoMensajeEmitido() { return mensajesEmitidos.last() }
- 	method emitioMensaje() { return mensajesEmitidos.size() > 0 }
+ 	method emitioMensaje(mensaje) { return mensajesEmitidos.any({m => m == mensaje }) }
  	method esEscueta() { return not mensajesEmitidos.any({mensaje => mensaje.size() > 30 }) }
  	
  	override method prepararViaje() {
@@ -97,10 +102,9 @@ class NaveCombate inherits NaveEspacial{
  		self.emitirMensaje("Saliendo en misión")
  	}
  	
- 	method escapar() { self.acercarseUnPocoAlSol(); self.acercarseUnPocoAlSol() }
-	method avisar() { self.emitirMensaje("Amenaza recibida") }
- 	method recibirAmenaza() { self.escapar(); self.avisar() }
- 	
+ 	override method escapar() { self.acercarseUnPocoAlSol(); self.acercarseUnPocoAlSol() }
+	override method avisar() { self.emitirMensaje("Amenaza recibida") }
+ 	 	
  	override method estaTranquila() { return super() and not misilesDesplegados }
 }
 
@@ -118,14 +122,8 @@ class NaveHospital inherits NavePasajeros{
  
 class NaveCombateSigilosa inherits NaveCombate {
 	
-	override method recibirAmenaza() { super(); self.desplegarMisiles(); self.ponerInvisible() }
+	override method escapar() { self.desplegarMisiles(); self.ponerInvisible() }
 	
 	override method estaTranquila() { return super() and not self.estaInvisible() }
 }
- 
- 
- 
- 
- 
- 
  
