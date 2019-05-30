@@ -1,0 +1,17 @@
+import naves.*
+
+describe "test de navePasajeros"{
+	
+	var navePasajeros = new NavePasajeros(pasajeros = 10)
+	
+	test "prepararViaje()"{
+		
+		
+		navePasajeros.prepararViaje()
+		
+		assert.equals(40, navePasajeros.racionesComida())
+		assert.equals(60, navePasajeros.racionesBebida())
+	}
+	
+
+}
